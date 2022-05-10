@@ -19,15 +19,36 @@
       padding: 0;
       margin: 0;
     }
+
+    body {
+      user-select: none;
+    }
+
+    .display-flex {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .w-100 {
+      width: 100%;
+    }
+
+    .vh-50 {
+      height: 50vh;
+    }
   </style>
   <body>
     <h1>
-      <a
+      <!-- <a
         href="https://i.pinimg.com/564x/26/de/a4/26dea443d8f0748afaeaed2f6cd45f88.jpg"
         download="hello"
         >Download Image</a
       >
-      <progress id="progress-download-image" value="0" max="100"></progress>
+      <progress id="progress-download-image" value="0" max="100"></progress> -->
+      <h1>This is photo</h1>
+      <div id="multi-image" class="display-flex flex-col">
+        <!-- <img id="select-image" src="./splash.png" alt="" class="w-100 vh-50" /> -->
+      </div>
     </h1>
   </body>
 </html>

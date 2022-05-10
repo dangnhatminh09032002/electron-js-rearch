@@ -1,6 +1,5 @@
 // Modules
-const { app, BrowserWindow, session } = require("electron");
-const path = require("path");
+const { app, BrowserWindow, dialog } = require("electron");
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -8,8 +7,6 @@ let mainWindow;
 
 // Create a new BrowserWindow when `app` is ready
 function createWindow() {
-  let ses = session.defaultSession;
-
   mainWindow = new BrowserWindow({
     width: 1000,
     height: 800,
@@ -22,31 +19,56 @@ function createWindow() {
     },
   });
 
-  ses.on("will-download", (event, item, webContents) => {
-    console.log("starting download");
-    const fileName = item.getFilename();
-    const fileSize = item.getTotalBytes();
-
-    // Save to desktop
-    const PATH = path.join(app.getPath("desktop"), fileName);
-    item.setSavePath(PATH);
-    item.on("updated", (event, state) => {
-      let received = item.getReceivedBytes();
-      if (state === "progressing" && received) {
-        let progressing = Math.round((received / fileSize) * 100);
-        webContents.executeJavaScript(
-          `document.getElementById("progress-download-image").value = ${progressing}`
-        );
-      }
-      console.log(received);
-    });
-  });
-
   // Load index.html into the new BrowserWindow
   mainWindow.loadFile("index.html");
 
   // Open DevTools - Remove for PRODUCTION!
   mainWindow.webContents.openDevTools();
+
+  // Handle webContents events
+  mainWindow.webContents.on("did-finish-load", () => {
+    // dialog
+    //   .showOpenDialog(mainWindow, {
+    //     title: "Hello world!",
+    //     buttonLabel: "Select a photo",
+    //     defaultPath: app.getPath("desktop"),
+    //     properties: ["multiSelections"],
+    //   })
+    //   .then((result) => {
+    //     const paths = result.filePaths;
+    //     mainWindow.webContents.executeJavaScript(
+    //       `
+    //       const paths = ${JSON.stringify(paths)};
+    //       paths.forEach(function(path){
+    //         var img = document.createElement("img");
+    //         img.src = path;
+    //         img.setAttribute("class", "w-100 vh-50");
+    //         const imgContainer = document.getElementById("multi-image")
+    //         imgContainer.appendChild(img);
+    //       })
+    //       `
+    //     );
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
+
+    // dialog.showSaveDialog(mainWindow, {}).then((result) => {
+    //   console.log(result);
+    // });
+
+    const answers = ["Yes", "No", "Cancel"];
+    dialog
+      .showMessageBox(mainWindow, {
+        title: "say hello",
+        message: "Good morning",
+        detail: "My name is Minh",
+        buttons: answers,
+      })
+      .then((result) => {
+        console.log(`User selected "${answers[result.response]}"`);
+      });
+  });
 
   // Listen for window being closed
   mainWindow.on("closed", () => {
