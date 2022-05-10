@@ -1,5 +1,5 @@
 // Modules
-const { app, BrowserWindow, dialog } = require("electron");
+const { app, BrowserWindow, globalShortcut } = require("electron");
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -25,50 +25,25 @@ function createWindow() {
   // Open DevTools - Remove for PRODUCTION!
   mainWindow.webContents.openDevTools();
 
-  // Handle webContents events
-  mainWindow.webContents.on("did-finish-load", () => {
-    // dialog
-    //   .showOpenDialog(mainWindow, {
-    //     title: "Hello world!",
-    //     buttonLabel: "Select a photo",
-    //     defaultPath: app.getPath("desktop"),
-    //     properties: ["multiSelections"],
-    //   })
-    //   .then((result) => {
-    //     const paths = result.filePaths;
-    //     mainWindow.webContents.executeJavaScript(
-    //       `
-    //       const paths = ${JSON.stringify(paths)};
-    //       paths.forEach(function(path){
-    //         var img = document.createElement("img");
-    //         img.src = path;
-    //         img.setAttribute("class", "w-100 vh-50");
-    //         const imgContainer = document.getElementById("multi-image")
-    //         imgContainer.appendChild(img);
-    //       })
-    //       `
-    //     );
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
+  // This should work on all windows
+  // globalShortcut.register("CommandOrControl + G", () => {
+  //   console.log("User pressed: " + "Control + G");
+  // });
 
-    // dialog.showSaveDialog(mainWindow, {}).then((result) => {
-    //   console.log(result);
-    // });
-
-    const answers = ["Yes", "No", "Cancel"];
-    dialog
-      .showMessageBox(mainWindow, {
-        title: "say hello",
-        message: "Good morning",
-        detail: "My name is Minh",
-        buttons: answers,
-      })
-      .then((result) => {
-        console.log(`User selected "${answers[result.response]}"`);
-      });
+  mainWindow.on("focus", () => {
+    globalShortcut.register("CommandOrControl + G", () => {
+      console.log("User pressed: " + "Control + G");
+    });
   });
+
+  mainWindow.on("blur", () => {
+    globalShortcut.unregister("CommandOrControl + G", () => {
+      console.log("User unregister key pressed: " + "CommandOrControl + G");
+    });
+  });
+
+  let count = 0;
+  // Register shorcut in global
 
   // Listen for window being closed
   mainWindow.on("closed", () => {
