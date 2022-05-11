@@ -1,19 +1,16 @@
 // This file is required by the index.html file and will
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
-console.log("Renderer is available");
-const { desktopCapturer } = require("electron");
+const { ipcRenderer } = require("electron");
 
-document.getElementById("screenshot-button").addEventListener("click", () => {
-  desktopCapturer
-    .getSources({
-      types: ["screen"],
-      thumbnailSize: { width: 1920, height: 1080 },
-    })
-    .then((sources) => {
-      console.log(sources);
-      document.getElementById("screenshot").src =
-        sources[2].thumbnail.toDataURL();
-      console.log(sources[0].thumbnail.toDataURL());
-    });
+const talkElement = document
+  .getElementById("talk")
+  .addEventListener("click", () => {
+    console.log("Sending event");
+    ipcRenderer.send("hello-word", "Send event successfully", 12);
+  });
+
+ipcRenderer.on("renderer-log-response", (event, ...args) => {
+  console.log(JSON.stringify(args));
+  console.log(JSON.stringify(args));
 });

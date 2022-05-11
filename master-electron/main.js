@@ -1,5 +1,6 @@
 // Modules
-const { app, BrowserWindow, screen } = require("electron");
+const { app, BrowserWindow, ipcMain } = require("electron");
+
 let mainWindow;
 
 const loggerInBrowser = (details) => {
@@ -9,8 +10,6 @@ const loggerInBrowser = (details) => {
 };
 // Create a new BrowserWindow when `app` is ready
 function createWindow() {
-  const privateBrowser = screen.getPrimaryDisplay();
-  console.log(privateBrowser);
   mainWindow = new BrowserWindow({
     width: 1000,
     height: 800,
@@ -21,6 +20,15 @@ function createWindow() {
       contextIsolation: false,
       nodeIntegration: true,
     },
+  });
+
+  ipcMain.on("hello-word", (event, ...args) => {
+    console.log(args);
+  });
+
+  // Event handlers
+  mainWindow.webContents.on("did-finish-load", () => {
+    mainWindow.webContents.send("renderer-log-response", "hello minh");
   });
 
   // Load index.html into the new BrowserWindow
