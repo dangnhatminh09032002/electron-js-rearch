@@ -1,9 +1,30 @@
 // Modules
-const { app, BrowserWindow, globalShortcut } = require("electron");
+const { app, BrowserWindow, Menu, MenuItem } = require("electron");
+const { mainMenus } = require("./mainMenu");
 
-// Keep a global reference of the window object, if you don't, the window will
-// be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
+
+let mainMenu = Menu.buildFromTemplate(mainMenus);
+
+// let mainMenu = new Menu();
+// const menuItems = [
+//   new MenuItem({
+//     label: "Menu 1",
+//     submenu: [
+//       {
+//         label: "Sub Menu 1",
+//       },
+//       {
+//         label: "Sub Menu 2",
+//       },
+//       {
+//         label: "Sub Menu 3",
+//       },
+//     ],
+//   }),
+//   new MenuItem({ label: "Menu 2" }),
+// ];
+// menuItems.forEach((menuItem) => mainMenu.append(menuItem));
 
 // Create a new BrowserWindow when `app` is ready
 function createWindow() {
@@ -25,25 +46,7 @@ function createWindow() {
   // Open DevTools - Remove for PRODUCTION!
   mainWindow.webContents.openDevTools();
 
-  // This should work on all windows
-  // globalShortcut.register("CommandOrControl + G", () => {
-  //   console.log("User pressed: " + "Control + G");
-  // });
-
-  mainWindow.on("focus", () => {
-    globalShortcut.register("CommandOrControl + G", () => {
-      console.log("User pressed: " + "Control + G");
-    });
-  });
-
-  mainWindow.on("blur", () => {
-    globalShortcut.unregister("CommandOrControl + G", () => {
-      console.log("User unregister key pressed: " + "CommandOrControl + G");
-    });
-  });
-
-  let count = 0;
-  // Register shorcut in global
+  Menu.setApplicationMenu(mainMenu);
 
   // Listen for window being closed
   mainWindow.on("closed", () => {
