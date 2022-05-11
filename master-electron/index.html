@@ -39,24 +39,24 @@
   <body>
     <h1>Hello World!</h1>
     <!-- <h3><a href="./login.html" target="_blank">login</a></h3> -->
-    <h3 onclick="navigator()"">login</h3>
+    <!-- <h3 onclick="navigator()"">login</h3>
     <h3 onclick="closeWin()"">close</h3>
-    <h3 onclick="evalWin()"">eval</h3>
+    <h3 onclick="evalWin()"">eval</h3> -->
+    <h3 onclick="increase()">+</h3>
+    <h3 onclick="decrease()">-</h3>
   </body>
   <script type="text/javascript">
-    require("./renderer.js");
-    let win;
-    const navigator = (url) => {
-      win = window.open('./login.html')
-      console.log(win)
-    }
+    const { webFrame } = require("electron");
 
-    const closeWin = () => {
-      win.close();
-    }
+    let zoomSize = webFrame.getZoomFactor();
 
-    const evalWin = () => {
-      win.eval("console.log('Hello World')")
-    }
+    const increase = () => {
+      zoomSize += 1;
+      webFrame.setZoomLevel(zoomSize);
+    };
+    const decrease = () => {
+      zoomSize -= 1;
+      webFrame.setZoomLevel(zoomSize);
+    };
   </script>
 </html>

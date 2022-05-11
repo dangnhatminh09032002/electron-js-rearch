@@ -4,9 +4,8 @@ const {
   BrowserWindow,
   powerMonitor,
   screen,
-  BrowserWindowProxy,
+  webFrame,
 } = require("electron");
-
 let mainWindow;
 
 const loggerInBrowser = (details) => {
@@ -16,7 +15,6 @@ const loggerInBrowser = (details) => {
 };
 // Create a new BrowserWindow when `app` is ready
 function createWindow() {
-  const primaryDisplay = screen.getPrimaryDisplay();
   mainWindow = new BrowserWindow({
     width: 1000,
     height: 800,
@@ -27,6 +25,10 @@ function createWindow() {
       contextIsolation: false,
       nodeIntegration: true,
     },
+  });
+
+  mainWindow.webContents.on("did-finish-load", () => {
+    webFrame.setZoomFactor(4);
   });
 
   // Load index.html into the new BrowserWindow
