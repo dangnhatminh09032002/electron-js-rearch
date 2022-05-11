@@ -1,13 +1,19 @@
 // Modules
-const { app, BrowserWindow, powerMonitor } = require("electron");
+const { app, BrowserWindow, powerMonitor, screen } = require("electron");
 
 let mainWindow;
 
+const loggerInBrowser = (details) => {
+  mainWindow.webContents.executeJavaScript(
+    `console.log(${JSON.stringify(details)})`
+  );
+};
 // Create a new BrowserWindow when `app` is ready
 function createWindow() {
+  const primaryDisplay = screen.getPrimaryDisplay();
   mainWindow = new BrowserWindow({
-    width: 1000,
-    height: 800,
+    width: primaryDisplay.bounds.width,
+    height: primaryDisplay.bounds.height,
     webPreferences: {
       // --- !! IMPORTANT !! ---
       // Disable 'contextIsolation' to allow 'nodeIntegration'
@@ -15,6 +21,13 @@ function createWindow() {
       contextIsolation: false,
       nodeIntegration: true,
     },
+  });
+
+  // Work wtih Screen
+
+  loggerInBrowser(screen.getAllDisplays());
+  screen.on("display-metrics-changed", () => {
+    loggerInBrowser(screen.getAllDisplays());
   });
 
   // Load index.html into the new BrowserWindow
