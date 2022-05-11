@@ -1,11 +1,5 @@
 // Modules
-const {
-  app,
-  BrowserWindow,
-  powerMonitor,
-  screen,
-  webFrame,
-} = require("electron");
+const { app, BrowserWindow, screen } = require("electron");
 let mainWindow;
 
 const loggerInBrowser = (details) => {
@@ -15,6 +9,8 @@ const loggerInBrowser = (details) => {
 };
 // Create a new BrowserWindow when `app` is ready
 function createWindow() {
+  const privateBrowser = screen.getPrimaryDisplay();
+  console.log(privateBrowser);
   mainWindow = new BrowserWindow({
     width: 1000,
     height: 800,
@@ -27,21 +23,8 @@ function createWindow() {
     },
   });
 
-  mainWindow.webContents.on("did-finish-load", () => {
-    webFrame.setZoomFactor(4);
-  });
-
   // Load index.html into the new BrowserWindow
   mainWindow.loadFile("index.html");
-
-  // Handle powerMonitor
-  powerMonitor.on("suspend", () => {
-    console.log("Saving data before suspend");
-  });
-
-  powerMonitor.on("resume", () => {
-    console.log("Resuming data");
-  });
 
   // Open DevTools - Remove for PRODUCTION!
   mainWindow.webContents.openDevTools();
