@@ -1,30 +1,11 @@
 // Modules
-const { app, BrowserWindow, Menu, MenuItem } = require("electron");
-const { mainMenus } = require("./mainMenu");
+const { app, BrowserWindow, Menu, dialog } = require("electron");
 
 let mainWindow;
 
-let mainMenu = Menu.buildFromTemplate(mainMenus);
-
-// let mainMenu = new Menu();
-// const menuItems = [
-//   new MenuItem({
-//     label: "Menu 1",
-//     submenu: [
-//       {
-//         label: "Sub Menu 1",
-//       },
-//       {
-//         label: "Sub Menu 2",
-//       },
-//       {
-//         label: "Sub Menu 3",
-//       },
-//     ],
-//   }),
-//   new MenuItem({ label: "Menu 2" }),
-// ];
-// menuItems.forEach((menuItem) => mainMenu.append(menuItem));
+const contextMenu = Menu.buildFromTemplate([
+  { label: "Label 1", role: "copy" },
+]);
 
 // Create a new BrowserWindow when `app` is ready
 function createWindow() {
@@ -43,10 +24,15 @@ function createWindow() {
   // Load index.html into the new BrowserWindow
   mainWindow.loadFile("index.html");
 
+  // Handle event webContents
+  mainWindow.webContents.on("context-menu", (event, params) => {
+    console.log(params);
+    contextMenu.popup(mainWindow);
+    console.log("context-menu created");
+  });
+
   // Open DevTools - Remove for PRODUCTION!
   mainWindow.webContents.openDevTools();
-
-  Menu.setApplicationMenu(mainMenu);
 
   // Listen for window being closed
   mainWindow.on("closed", () => {
