@@ -1,11 +1,7 @@
 // Modules
-const { app, BrowserWindow, Tray, Menu } = require("electron");
+const { app, BrowserWindow, powerMonitor } = require("electron");
 
 let mainWindow;
-
-const createTray = (url) => {
-  return new Tray(url);
-};
 
 // Create a new BrowserWindow when `app` is ready
 function createWindow() {
@@ -21,29 +17,17 @@ function createWindow() {
     },
   });
 
-  // Tray
-  const tray = createTray("./trayTemplate@5x.png");
-  const contextMenu = Menu.buildFromTemplate([
-    {
-      label: "Quit app",
-      role: "quit",
-      // type: "normal",
-      // click: (menuItem, browserWindow) => {
-      //   app.quit();
-      // },
-    },
-  ]);
-  tray.setToolTip("This is app hello");
-  tray.setContextMenu(contextMenu);
-
-  tray.on("click", () => {
-    mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
-  });
-
   // Load index.html into the new BrowserWindow
   mainWindow.loadFile("index.html");
 
-  // Handle event webContents
+  // Handle powerMonitor
+  powerMonitor.on("suspend", () => {
+    console.log("Saving data before suspend");
+  });
+
+  powerMonitor.on("resume", () => {
+    console.log("Resuming data");
+  });
 
   // Open DevTools - Remove for PRODUCTION!
   mainWindow.webContents.openDevTools();
