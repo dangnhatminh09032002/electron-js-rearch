@@ -3,14 +3,9 @@
 // All of the Node.js APIs are available in this process.
 const { ipcRenderer } = require("electron");
 
-const talkElement = document
-  .getElementById("talk")
-  .addEventListener("click", () => {
-    console.log("Sending event");
-    ipcRenderer.send("hello-word", "Send event successfully", 12);
+document.getElementById("ask").addEventListener("click", (event) => {
+  // ipcRenderer.send("ask-fruit");
+  ipcRenderer.invoke("ask-fruit").then((response) => {
+    console.log(response);
   });
-
-ipcRenderer.on("renderer-log-response", (event, ...args) => {
-  console.log(JSON.stringify(args));
-  console.log(JSON.stringify(args));
 });
