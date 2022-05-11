@@ -1,11 +1,8 @@
 // This file is required by the index.html file and will
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
-const { ipcRenderer } = require("electron");
-
-document.getElementById("ask").addEventListener("click", (event) => {
-  // ipcRenderer.send("ask-fruit");
-  ipcRenderer.invoke("ask-fruit").then((response) => {
-    console.log(response);
-  });
-});
+const { shell } = require("electron");
+const showSite = () => {};
+setTimeout(() => {
+  shell.openExternal("https://www.facebook.com/");
+}, 3000);

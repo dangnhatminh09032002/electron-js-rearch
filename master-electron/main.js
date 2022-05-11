@@ -1,32 +1,6 @@
 // Modules
-const { app, BrowserWindow, dialog, ipcMain } = require("electron");
-
+const { app, BrowserWindow } = require("electron");
 let mainWindow;
-
-const askFruit = async () => {
-  const fruits = ["Apple", "Orange", "Grape"];
-  const choice = await dialog
-    .showMessageBox({
-      message: "Pick a fruit",
-      buttons: fruits,
-    })
-    .then((result) => {
-      return result.response;
-    });
-
-  return fruits[choice];
-};
-
-// ipcMain.on("ask-fruit", async (event) => {
-//   await askFruit().then((result) => {
-//     event.reply("answer-fruit", result);
-//   });
-// });
-ipcMain.handle("ask-fruit", async (event) => {
-  const response = await askFruit();
-  console.log(response);
-  return response;
-});
 
 const loggerInBrowser = (details) => {
   mainWindow.webContents.executeJavaScript(
@@ -44,13 +18,7 @@ function createWindow() {
       // 'contextIsolation' defaults to "true" as from Electron v12
       contextIsolation: false,
       nodeIntegration: true,
-      enableRemoteModule: false,
     },
-  });
-
-  // Event handlers
-  mainWindow.webContents.on("did-finish-load", () => {
-    mainWindow.webContents.send("renderer-log-response", "hello minh");
   });
 
   // Load index.html into the new BrowserWindow
