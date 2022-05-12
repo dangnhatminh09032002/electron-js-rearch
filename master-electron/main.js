@@ -1,5 +1,5 @@
 // Modules
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, ipcMain } = require("electron");
 let mainWindow;
 
 const loggerInBrowser = (details) => {
@@ -7,6 +7,7 @@ const loggerInBrowser = (details) => {
     `console.log(${JSON.stringify(details)})`
   );
 };
+
 // Create a new BrowserWindow when `app` is ready
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -32,6 +33,12 @@ function createWindow() {
     mainWindow = null;
   });
 }
+
+// Create new event listener
+ipcMain.handle("get-app-path", (event, ...args) => {
+  const APP_PATH = app.getAppPath();
+  return APP_PATH;
+});
 
 // Electron `app` is ready
 app.on("ready", createWindow);
