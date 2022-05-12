@@ -2,7 +2,6 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
 
-app.setAppUserModelId(process.execPath);
 let mainWindow;
 
 const loggerInBrowser = (details) => {
@@ -23,7 +22,28 @@ function createWindow() {
     },
   });
 
-  // Handle events for webContents
+  const progressBar = () => {
+    const INCREMENT = 0.03;
+    const INTERVAL_DELAY = 100; // ms
+    let c = 0;
+    const progressInterval = setInterval(() => {
+      // update progress bar to next value
+      // values between 0 and 1 will show progress, >1 will show indeterminate or stick at 100%
+      mainWindow.setProgressBar(c);
+      // increment or reset progress bar
+      if (c <= 1) {
+        c += INCREMENT;
+      } else {
+        // c = -INCREMENT * 5; // reset to a bit less than 0 to show reset state
+        clearInterval(progressInterval);
+        mainWindow.setProgressBar(-1);
+      }
+    }, INTERVAL_DELAY);
+    app.on("before-quit", () => {
+      clearInterval(progressInterval);
+    });
+  };
+  progressBar();
 
   // Load index.html into the new BrowserWindow
   mainWindow.loadFile("./index.html");
@@ -36,12 +56,6 @@ function createWindow() {
     mainWindow = null;
   });
 }
-
-// Create new event listener
-ipcMain.handle("get-app-path", (event, ...args) => {
-  const APP_PATH = app.getAppPath();
-  return APP_PATH;
-});
 
 // Electron `app` is ready
 app.on("ready", createWindow);
