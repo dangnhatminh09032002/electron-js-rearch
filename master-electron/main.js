@@ -1,5 +1,6 @@
 // Modules
-const { app, BrowserWindow, ipcMain, Notification } = require("electron");
+const { app, BrowserWindow, ipcMain } = require("electron");
+const path = require("path");
 
 app.setAppUserModelId(process.execPath);
 let mainWindow;
@@ -16,9 +17,9 @@ function createWindow() {
     width: 1000,
     height: 800,
     webPreferences: {
-      contextIsolation: false,
-      nodeIntegration: true,
-      enableRemoteModule: true,
+      contextIsolation: true,
+      nodeIntegration: false,
+      preload: path.join(__dirname, "preload.js"),
     },
   });
 
