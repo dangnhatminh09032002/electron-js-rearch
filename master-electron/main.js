@@ -1,6 +1,7 @@
 // Modules
 const { app, BrowserWindow, ipcMain, Notification } = require("electron");
 
+app.setAppUserModelId(process.execPath);
 let mainWindow;
 
 const loggerInBrowser = (details) => {
@@ -23,11 +24,6 @@ function createWindow() {
 
   // Handle events for webContents
 
-  // Create a new Notifi
-  const notification = new Notification({
-    title: "Hello",
-  });
-  notification.show();
   // Load index.html into the new BrowserWindow
   mainWindow.loadFile("./index.html");
 
