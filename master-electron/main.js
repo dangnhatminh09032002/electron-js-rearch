@@ -1,5 +1,5 @@
 // Modules
-const { app, BrowserWindow, ipcMain } = require("electron");
+const { app, BrowserWindow, ipcMain, Notification } = require("electron");
 
 let mainWindow;
 
@@ -17,11 +17,17 @@ function createWindow() {
     webPreferences: {
       contextIsolation: false,
       nodeIntegration: true,
+      enableRemoteModule: true,
     },
   });
 
   // Handle events for webContents
 
+  // Create a new Notifi
+  const notification = new Notification({
+    title: "Hello",
+  });
+  notification.show();
   // Load index.html into the new BrowserWindow
   mainWindow.loadFile("./index.html");
 

@@ -1,18 +1,17 @@
 // This file is required by the index.html file and will
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
-const updateStatus = () => {
-  const statusElement = document.getElementById("status");
-  statusElement.innerHTML = navigator.onLine ? "Online" : "Offline";
-};
+// const { remote } = require("electron");
 
-window.addEventListener("load", () => {
-  updateStatus();
-  window.removeEventListener("load", () => {});
-  window.addEventListener("online", () => {
-    updateStatus();
-  });
-  window.addEventListener("offline", () => {
-    updateStatus();
-  });
-});
+// const newNotification = new remote.Notification({
+//   title: "Notification",
+//   body: "Hello minh",
+// });
+
+// // const notification = new Notification({
+// //   title: "Notification",
+// //   body: "Hello minh",
+// // });
+// newNotification.show();
+
+// console.log(remote.getCurrentWindow());
