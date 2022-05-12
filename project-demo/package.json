@@ -1,0 +1,20 @@
+{
+  "name": "project-demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "start:dev": "nodemon --exec electron ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^18.2.3",
+    "nodemon": "^2.0.16"
+  },
+  "dependencies": {
+    "electron-window-state": "^5.0.3"
+  }
+}
