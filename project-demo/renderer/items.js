@@ -1,4 +1,5 @@
 const fs = require("fs");
+const { shell } = require("electron");
 
 // Get readerJS content
 let readerJS;
@@ -135,6 +136,15 @@ exports.remove = () => {
   });
   this.render(newListItem);
   return oldItem;
+};
+
+exports.openNative = () => {
+  if (!this.storage.length) return;
+  let selectedItem = items.getElementsByClassName("read-item selected")[0];
+
+  let contentURL = selectedItem.dataset.url;
+
+  shell.openExternal(contentURL);
 };
 
 // Add items from storage when app loads

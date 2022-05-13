@@ -10,6 +10,19 @@ let showModal = document.getElementById("show-modal"),
   itemUrl = document.getElementById("url"),
   search = document.getElementById("search");
 
+// Handle events
+ipcRenderer.on("show-modal", function () {
+  showModal.click();
+});
+
+ipcRenderer.on("open-item", function () {
+  items.open();
+});
+
+ipcRenderer.on("open-native", function () {
+  items.openNative();
+});
+
 // Disable & Enable modal buttons
 const toggleModalButtons = () => {
   // Check state of buttons
