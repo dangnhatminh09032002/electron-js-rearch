@@ -1,17 +1,43 @@
 {
-  "name": "project-demo",
+  "name": "Readit",
   "version": "1.0.0",
-  "description": "",
+  "description": "Readit project demo app with electron",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "watch": "nodemon --exec electron ."
+    "watch": "nodemon --exec electron .",
+    "build:win": "electron-builder -w"
   },
-  "keywords": [],
-  "author": "",
+  "build": {
+    "appId": "com.dangnhatminh.readit",
+    "copyright": "Minh Dang (c)",
+    "directories": {
+      "output": "build"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "./images/icon.ico"
+    }
+  },
+  "repository": "",
+  "homepage": "",
+  "keywords": [
+    "Electron",
+    "App",
+    "Readit"
+  ],
+  "author": "Dang Nhat Minh",
   "license": "ISC",
   "devDependencies": {
     "electron": "^18.2.3",
+    "electron-builder": "^23.0.3",
     "nodemon": "^2.0.16"
   },
   "dependencies": {

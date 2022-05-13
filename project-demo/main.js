@@ -47,7 +47,7 @@ function createWindow() {
   state.manage(mainWindow);
 
   // Open DevTools - Remove for PRODUCTION!
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
 
   // Listen for window being closed
   mainWindow.on("closed", () => {
@@ -56,7 +56,7 @@ function createWindow() {
 }
 
 // Create app menu
-appMenu()
+appMenu();
 
 // Electron `app` is ready
 app.on("ready", createWindow);
