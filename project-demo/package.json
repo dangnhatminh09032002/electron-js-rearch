@@ -1,12 +1,14 @@
 {
   "name": "Readit",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Readit project demo app with electron",
+  "repository": "https://github.com/dangnhatminh09032002asdf/electron-js-rearch.git",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
     "watch": "nodemon --exec electron .",
     "build:win": "electron-builder -w",
+    "release": "electron-builder -w -p onTagOrDraft",
     "create-cert": "electron-builder create-self-signed-cert -p dangnhatminh"
   },
   "build": {
@@ -16,6 +18,10 @@
       "output": "build"
     },
     "win": {
+      "publish": {
+        "provider": "github",
+        "url": "https://github.com/dangnhatminh09032002/electron-js-rearch.git"
+      },
       "target": [
         {
           "target": "nsis",
