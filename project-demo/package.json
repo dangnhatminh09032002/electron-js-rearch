@@ -6,7 +6,8 @@
   "scripts": {
     "start": "electron .",
     "watch": "nodemon --exec electron .",
-    "build:win": "electron-builder -w"
+    "build:win": "electron-builder -w",
+    "create-cert": "electron-builder create-self-signed-cert -p dangnhatminh"
   },
   "build": {
     "appId": "com.dangnhatminh.readit",
@@ -23,7 +24,11 @@
           ]
         }
       ],
-      "icon": "./images/icon.ico"
+      "icon": "./images/icon.ico",
+      "certificateFile": "./private/dangnhatminh.pfx",
+      "certificatePassword": "",
+      "publisherName": "dangnhatminh",
+      "verifyUpdateCodeSignature": true
     }
   },
   "repository": "",
