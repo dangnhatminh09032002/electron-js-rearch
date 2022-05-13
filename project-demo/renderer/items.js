@@ -1,32 +1,58 @@
+const fs = require("fs");
+const path = require("path");
+
+let readerFileString;
+fs.readFile(path.join(__dirname, "reader.js"), (err, data) => {
+  if (!err) readerFileString = data.toString();
+});
+
 // DOM nodes
 let items = document.getElementById("items");
-exports.element = items;
 
 // Track items in storage
 exports.storage = JSON.parse(localStorage.getItem("readit-items")) || [];
-// Add items from storage when app loads
-exports.render = (listItem = null) => {
-  if (!listItem) listItem = this.storage;
-  items.innerHTML = "";
-  listItem.forEach((item) => {
-    this.addItem(item);
-  });
-  items.childNodes.forEach((item) => {
-    item.addEventListener("click", function (event) {
-      const ADD_CLASS = "selected";
-      const listElement = [...items.getElementsByClassName(ADD_CLASS)];
-      listElement.forEach((element) => {
-        if (!item.classList.contains(ADD_CLASS))
-          element.classList.remove(ADD_CLASS);
-      });
-      this.classList.add(ADD_CLASS);
-    });
-  });
-};
 
 // Persist storage
 exports.save = () => {
   localStorage.setItem("readit-items", JSON.stringify(this.storage));
+};
+
+// Render data to html
+exports.render = (listItem = null) => {
+  if (!listItem) listItem = this.storage;
+
+  // Reset element
+  items.innerHTML = "";
+
+  // Render element for display
+  listItem.forEach((item) => {
+    this.addItem(item);
+  });
+};
+
+// Set item as selected
+exports.select = (e) => {
+  // Remove currently selected item class
+  const resetSelectedElement = () => {
+    const selectedElement =
+      document.getElementsByClassName("read-item selected")[0];
+    if (selectedElement) selectedElement.classList.remove("selected");
+  };
+  resetSelectedElement();
+  // Add to clicked item
+  e.currentTarget.classList.add("selected");
+
+  // Get items url
+  const url = e.currentTarget.dataset.url;
+
+  // Open item in proxy BrowserWindow
+  const win = window.open(
+    url,
+    "",
+    `width=1000,height=800,x=200,y=200,nodeIntegration=0`
+  );
+  win.eval(readerFileString);
+  win.addEventListener("close", () => {});
 };
 
 // Add new item
@@ -34,11 +60,15 @@ exports.addItem = (item, isNew = false) => {
   // Create a new DOM node
   let itemNode = document.createElement("div");
 
-  // Assign "read-item" class
+  // Set atributes for item
   itemNode.setAttribute("class", "read-item");
+  itemNode.setAttribute("data-url", item.url);
 
   // Add inner HTML
   itemNode.innerHTML = `<img src="${item.screenshot}"><h2>${item.title}</h2>`;
+
+  // Attach click handler to select
+  itemNode.addEventListener("click", this.select);
 
   // Append new node to "items"
   items.appendChild(itemNode);
@@ -49,22 +79,6 @@ exports.addItem = (item, isNew = false) => {
     this.storage.push(item);
     this.save();
   }
-};
-
-// Filter items
-exports.filter = (str) => {
-  const listItem = this.storage;
-  str = str
-    .split(" ")
-    .reduce(
-      (previousValue, currentValue) => previousValue + `(?=.*${currentValue})`,
-      ""
-    );
-  const reg = new RegExp(`${str.toLowerCase()}`, "g");
-  const itemsFiltered = listItem.filter((item) =>
-    item.title.toLowerCase().match(reg)
-  );
-  this.render(itemsFiltered);
 };
 
 // Remove item

@@ -3,6 +3,9 @@ const { ipcRenderer } = require("electron");
 const items = require("./items");
 
 items.render();
+// window.addEventListener("storage", () => {
+//   items.render();
+// });
 
 // Dom Nodes
 let showModal = document.getElementById("show-modal"),
@@ -30,17 +33,24 @@ const toggleModalButtons = () => {
 
 // Filter items with 'search'
 search.addEventListener("input", (event) => {
-  const text = event.target.value;
-  items.filter(text);
-});
+  const itemsElements = document.getElementById("items").childNodes;
+  const textInput = event.target.value
+    .toLowerCase()
+    .split(" ")
+    .reduce(
+      (previousValue, currentValue) => previousValue + `(.*${currentValue})`,
+      ""
+    );
 
-// Select items with
-items.element.addEventListener("", (event) => {
-  console.log("element change");
-  items.element.childNodes.forEach((item) => {
-    item.addEventListener("click", (event) => {
-      event.target.classList.add("Hello");
-    });
+  const reg = new RegExp(`${textInput}`, "g");
+
+  itemsElements.forEach((item) => {
+    const innerText = item.innerText;
+    const innerTextToLowerCase = innerText.toLowerCase();
+
+    const isMatch = innerTextToLowerCase.match(reg);
+
+    isMatch ? (item.style.display = "flex") : (item.style.display = "none");
   });
 });
 
