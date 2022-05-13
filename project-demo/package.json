@@ -2,7 +2,7 @@
   "name": "Readit",
   "version": "1.0.1",
   "description": "Readit project demo app with electron",
-  "repository": "https://github.com/dangnhatminh09032002asdf/electron-js-rearch.git",
+  "repository": "",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
@@ -37,7 +37,6 @@
       "verifyUpdateCodeSignature": true
     }
   },
-  "repository": "",
   "homepage": "",
   "keywords": [
     "Electron",
@@ -52,6 +51,7 @@
     "nodemon": "^2.0.16"
   },
   "dependencies": {
+    "electron-updater": "^5.0.1",
     "electron-window-state": "^5.0.3"
   }
 }

@@ -3,6 +3,7 @@ const { app, BrowserWindow, ipcMain } = require("electron");
 const windowStateKeeper = require("electron-window-state");
 const readItem = require("./readItem");
 const appMenu = require("./menu");
+const updater = require("./updater.js");
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -70,3 +71,25 @@ app.on("window-all-closed", () => {
 app.on("activate", () => {
   if (mainWindow === null) createWindow();
 });
+
+class Execution {
+  localizations = {};
+  constructor(localizations) {
+    const keys = Object.keys(localizations);
+
+    keys.forEach((key) => {
+      this.localizations[key].code = localizations[key];
+      this.localizations[key].get = function () {
+        return key;
+      };
+    });
+  }
+}
+
+const newExections = new Exections({
+  BAD_REQUEST: "",
+  SUCCESS: "12",
+});
+
+console.log(newExections.localizations.BAD_REQUEST.code);
+console.log(newExections.localizations.BAD_REQUEST.get());
