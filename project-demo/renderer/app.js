@@ -2,11 +2,6 @@
 const { ipcRenderer } = require("electron");
 const items = require("./items");
 
-items.render();
-// window.addEventListener("storage", () => {
-//   items.render();
-// });
-
 // Dom Nodes
 let showModal = document.getElementById("show-modal"),
   closeModal = document.getElementById("close-modal"),

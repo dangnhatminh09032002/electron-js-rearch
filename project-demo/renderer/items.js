@@ -1,9 +1,9 @@
 const fs = require("fs");
-const path = require("path");
 
-let readerFileString;
-fs.readFile(path.join(__dirname, "reader.js"), (err, data) => {
-  if (!err) readerFileString = data.toString();
+// Get readerJS content
+let readerJS;
+fs.readFile(`${__dirname}/reader.js`, (err, data) => {
+  readerJS = data.toString();
 });
 
 // DOM nodes
@@ -17,17 +17,34 @@ exports.save = () => {
   localStorage.setItem("readit-items", JSON.stringify(this.storage));
 };
 
-// Render data to html
-exports.render = (listItem = null) => {
-  if (!listItem) listItem = this.storage;
+// Open selected item
+exports.open = () => {
+  // Only if we have items (in case of menu open)
+  if (!this.storage.length) return;
 
-  // Reset element
-  items.innerHTML = "";
+  // Get selected item
+  let selectedItem = document.getElementsByClassName("read-item selected")[0];
 
-  // Render element for display
-  listItem.forEach((item) => {
-    this.addItem(item);
-  });
+  // Get item's url
+  let contentURL = selectedItem.dataset.url;
+
+  // Open item in proxy BrowserWindow
+  let readerWin = window.open(
+    contentURL,
+    "_blank",
+    `
+    maxWidth=2000,
+    maxHeight=2000,
+    width=1200,
+    height=800,
+    backgroundColor=#DEDEDE,
+    nodeIntegration=0,
+    contextIsolation=1
+  `
+  );
+
+  // Inject JavaScript with specific item index (selectedItem.index)
+  readerWin.eval(readerJS);
 };
 
 // Set item as selected
@@ -41,18 +58,6 @@ exports.select = (e) => {
   resetSelectedElement();
   // Add to clicked item
   e.currentTarget.classList.add("selected");
-
-  // Get items url
-  const url = e.currentTarget.dataset.url;
-
-  // Open item in proxy BrowserWindow
-  const win = window.open(
-    url,
-    "",
-    `width=1000,height=800,x=200,y=200,nodeIntegration=0`
-  );
-  win.eval(readerFileString);
-  win.addEventListener("close", () => {});
 };
 
 // Add new item
@@ -69,17 +74,52 @@ exports.addItem = (item, isNew = false) => {
 
   // Attach click handler to select
   itemNode.addEventListener("click", this.select);
+  itemNode.addEventListener("dblclick", this.open);
 
   // Append new node to "items"
   items.appendChild(itemNode);
 
   // Add item to storage and persist
   if (isNew) {
-    item.id = this.storage.length;
     this.storage.push(item);
     this.save();
   }
 };
+
+// // Listen for "done" message from reader window
+// window.addEventListener("message", (e) => {
+//   // Check for correct message
+//   if (e.data.action === "delete-reader-item") {
+//     // Delete item at given index
+//     this.delete(e.data.itemIndex);
+
+//     // Close the reader window
+//     e.source.close();
+//   }
+// });
+
+// // Delete item
+// exports.delete = (itemIndex) => {
+//   // Remove item from DOM
+//   items.removeChild(items.childNodes[itemIndex]);
+
+//   // Remove item from storage
+//   this.storage.splice(itemIndex, 1);
+
+//   // Persist storage
+//   this.save();
+
+//   // Select previous item or new top item
+//   if (this.storage.length) {
+//     // Get new selected item index
+//     let = newSelectedItemIndex = itemIndex === 0 ? 0 : itemIndex - 1;
+
+//     // Select item at new index
+//     document
+//       .getElementsByClassName("read-item")
+//       [newSelectedItemIndex].classList.add("selected");
+//   }
+// };
 
 // Remove item
 exports.remove = () => {
@@ -96,3 +136,8 @@ exports.remove = () => {
   this.render(newListItem);
   return oldItem;
 };
+
+// Add items from storage when app loads
+this.storage.forEach((item) => {
+  this.addItem(item);
+});

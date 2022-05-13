@@ -30,7 +30,6 @@ function createWindow() {
     height: state.height,
     minWidth: 1000,
     minHeight: 800,
-    show: false,
     webPreferences: {
       // --- !! IMPORTANT !! ---
       // Disable 'contextIsolation' to allow 'nodeIntegration'
@@ -42,10 +41,6 @@ function createWindow() {
 
   // Load index.html into the new BrowserWindow
   mainWindow.loadFile("renderer/main.html");
-
-  mainWindow.webContents.on("did-finish-load", () => {
-    mainWindow.show();
-  });
 
   // Manage new window state
   state.manage(mainWindow);
